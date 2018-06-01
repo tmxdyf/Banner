@@ -1,0 +1,170 @@
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+//        applicationId "com.cy.src.banner"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+//            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+
+}
+
+//bintray {
+//    user = 'tmxdyf'
+//    key = 'b82d63fe3d06c42055a8f3cebf0b8445081ca251'
+//    pkg {
+//        repo = 'maven'
+//        name = 'com.cy.src.banner'
+//        userOrg = 'tmxdyf'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = 'https://github.com/tmxdyf/Banner.git'
+//    }
+//    version {
+//        name = '1.0-Alpha1'
+//        desc = 'Banner 1.0 Alpha1'
+//        released  = new Date()
+//        vcsTag = '1.0'
+//        attributes = ['banner': 'banner:com.cy.src.banner:banner']
+//    }
+//}
+
+
+//ext {
+//    package_userOrg = 'tmxdyf' // 组织名 不填默认用户名
+//    package_repo = 'maven' // bintray上的仓库名，一般为maven
+//    package_type = 'aar'  // 输出类型
+//    package_group = 'com.cy.src.banner' // JCenter的GroupId
+//    package_artifact = 'banner' // JCenter的ArtifactId
+//    package_version = '1.0'  // JCenter的VersionId
+//    package_description = 'banner'
+//
+//    siteUrl = 'https://github.com/tmxdyf/Banner.git'
+//    gitUrl = 'https://github.com/tmxdyf/Banner.git'
+//
+//    //开发者信息
+//    developerId = 'tmxdyf'
+//    developerName = 'tmxdyf'
+//    developerEmail = 'tmxdyf@163.com'
+//
+//    //开源协议
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = 'Apache-2.0'
+//}
+//
+//apply from:'https://raw.githubusercontent.com/Jude95/JCenter/v2/bintray.gradle'
+
+//=============================
+
+group = 'com.cy.src.banner'
+version = '1.0'
+
+def siteUrl = 'https://github.com/tmxdyf/Banner'
+def gitUrl = 'https://github.com/tmxdyf/Banner.git'
+
+def bintray_user='tmxdyf'
+def bintray_api_key=''
+
+bintray {
+    user = bintray_user
+    key = bintray_api_key
+
+    configurations = ['archives'] //When uploading configuration files
+    pkg {
+        repo = 'maven'
+        name = project.name
+        desc = 'Bintray aar publishing example'
+        websiteUrl = siteUrl
+        issueTrackerUrl = 'https://github.com/bintray/bintray-examples/issues'
+        vcsUrl = gitUrl
+        licenses = ['Apache-2.0']
+        labels = ['aar', 'android', 'example']
+        publicDownloadNumbers = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'Bintray publish Gradle aar example'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'tmxdyf'
+                        name 'tmxdyf'
+                        email 'tmxdyf@163.com'
+                    }
+                }
+                scm {
+                    connection 'https://github.com/tmxdyf/Banner.git'
+                    developerConnection 'https://github.com/tmxdyf/Banner.git'
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+artifacts {
+//    archives javadocJar
+    archives sourcesJar
+}
+
+task findConventions << {
+    println project.getConvention()
+}
